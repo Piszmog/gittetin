@@ -1,13 +1,23 @@
 <script lang="ts">
   import { invoke } from '@tauri-apps/api/tauri';
+  import type { Notification } from './lib/models/notifications';
 
-  invoke('get_notifications', { codeHost: 'GitHub', opts: { all: true } })
-    .then((res) => console.log(res))
-    .catch((e) => console.log(e));
+  const notificationsPromise = invoke<Notification[]>('get_notifications', {
+    codeHost: 'GitHub',
+    opts: { all: true },
+  });
 </script>
 
 <main>
-  <p>foo</p>
+  {#await notificationsPromise}
+    <p>Loading...</p>
+  {:then notifications}
+    {#each notifications as notification}
+      <p>{notification.id}</p>
+    {/each}
+  {:catch err}
+    <p>{err}</p>
+  {/await}
 </main>
 
 <style>
