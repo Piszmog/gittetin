@@ -11,11 +11,11 @@ use serde::{Deserialize, Serialize};
 pub struct Notification {
     id: String,
     title: String,
-    url: String,
+    url: Option<String>,
     reason: String,
     unread: bool,
     updated_at: String,
-    last_read_at: String,
+    last_read_at: Option<String>,
     notification_type: String,
     repository: Repository,
 }
@@ -52,7 +52,23 @@ pub struct GetOptions {
 impl GetOptions {
     /// Converts the options to query values.
     pub fn to_query(&self) -> HashMap<String, String> {
-        HashMap::new()
+        let mut query = HashMap::new();
+        if let Some(all) = self.all {
+            query.insert("all".to_string(), all.to_string());
+        }
+        if let Some(since) = self.since {
+            query.insert("since".to_string(), since.to_rfc3339());
+        }
+        if let Some(before) = self.before {
+            query.insert("before".to_string(), before.to_rfc3339());
+        }
+        if let Some(per_page) = self.per_page {
+            query.insert("per_page".to_string(), per_page.to_string());
+        }
+        if let Some(page) = self.page {
+            query.insert("page".to_string(), page.to_string());
+        }
+        query
     }
 }
 

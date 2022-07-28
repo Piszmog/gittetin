@@ -63,11 +63,11 @@ fn to_notification(value: &Value) -> super::Notification {
     super::Notification {
         id: value["id"].as_str().unwrap().to_string(),
         title: value["subject"]["title"].as_str().unwrap().to_string(),
-        url: value["subject"]["url"].as_str().unwrap().to_string(),
+        url: value["subject"]["url"].as_str().map(|s| s.to_string()),
         reason: value["reason"].as_str().unwrap().to_string(),
         unread: value["unread"].as_bool().unwrap(),
         updated_at: value["updated_at"].as_str().unwrap().to_string(),
-        last_read_at: value["last_read_at"].as_str().unwrap().to_string(),
+        last_read_at: value["last_read_at"].as_str().map(|s| s.to_string()),
         notification_type: value["subject"]["type"].as_str().unwrap().to_string(),
         repository: super::Repository {
             id: value["repository"]["id"].to_string(),
